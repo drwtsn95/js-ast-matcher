@@ -1,0 +1,141 @@
+{
+    "title": "angularjs library ast signature",
+    "type": "ast",
+    "desc": "",
+    "checks": [{
+        "type": "CallExpression",
+        "callee": {
+            "type": "MemberExpression",
+            "property": {
+                "type": "Identifier",
+                "name": "provider"
+            }
+        },
+        "arguments": [{
+            "type": "ObjectExpression",
+            "properties": {
+                "$values": [{
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$location"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$http"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$rootScope"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$parse"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$cacheFactory"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$document"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$sniffer"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$exceptionHandler"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$controller"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$filter"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$log"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$httpBackend"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$anchorScroll"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$templateCache"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$timeout"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$browser"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$window"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$q"
+                    }
+                }, {
+                    "type": "ObjectProperty",
+                    "key": {
+                        "type": "Identifier",
+                        "name": "$interpolate"
+                    }
+                }]
+            }
+        }]
+    }],
+    "$depth": 1,
+    "$length": 3000,
+    "output": {
+        "code": "{$0}",
+        "message": "resource.tagged.angularjs-lib-sign"
+    }
+}

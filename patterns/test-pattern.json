@@ -1,0 +1,46 @@
+{
+    "title": "test ast signature",
+    "type": "ast",
+    "desc": "",
+    "checks": [
+        {
+            "type": "AssignmentExpression",
+            "operator": "=",
+            "left": {
+                "type": "MemberExpression",
+                "property": {
+                    "type": "Identifier",
+                    "name": "propA"
+                }
+            },
+            "right": {
+                "type": "BinaryExpression",
+                "operator": "+",
+                "left": {
+                    "type": "MemberExpression",
+                    "property": {
+                        "type": "Identifier",
+                        "name": "propB"
+                    }
+                },
+                "right": {
+                    "type": "CallExpression",
+                    "callee": {
+                        "type": "MemberExpression",
+                        "property": {
+                            "type": "Identifier",
+                            "name": "methodC"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "$depth": 0,
+    "$length": 0,
+    "$maxTraverseDepth": 3,
+    "output": {
+        "code": "",
+        "message": ""
+    }
+}

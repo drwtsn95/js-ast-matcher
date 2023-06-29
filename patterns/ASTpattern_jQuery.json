@@ -1,0 +1,51 @@
+{
+    "title": "jquery library ast signature",
+    "type": "ast",
+    "desc": "",
+    "checks": [{
+        "type": "AssignmentExpression",
+        "operator": "=",
+        "left": {
+            "type": "MemberExpression",
+            "property": {
+                "type": "Identifier",
+                "name": "jQuery"
+            }
+        },
+        "right": {
+            "type": "AssignmentExpression",
+            "operator": "=",
+            "left": {
+                "type": "MemberExpression",
+                "property": {
+                    "type": "Identifier",
+                    "name": "$"
+                }
+            }
+        }
+    },
+    {
+        "type": "AssignmentExpression",
+        "operator": "=",
+        "left": {
+            "type": "MemberExpression",
+            "property": {
+                "type": "Identifier",
+                "name": "$"
+            }
+        },
+        "right": {                    
+            "type": "Identifier",
+            "name": "jQuery"
+        },
+        "_parent": {
+            "type": "ExpressionStatement"
+        }
+    }],
+    "$depth": 1,
+    "$length": 25000,
+    "output": {
+        "code": "{$0}",
+        "message": "resource.tagged.jquery-lib-sign"
+    }
+}

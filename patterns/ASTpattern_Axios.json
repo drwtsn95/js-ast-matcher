@@ -1,0 +1,98 @@
+{
+    "title": "axios library ast signature",
+    "type": "ast",
+    "desc": "",
+    "checks": [{
+        "type": "AssignmentExpression",
+        "operator": "=",
+        "left": {
+            "type": "MemberExpression",
+            "property": {
+                "type": "Identifier",
+                "name": "exports"
+            }
+        },
+        "right": {
+            "type": "ObjectExpression",
+            "properties": {
+                "$values": [{
+                        "type": "Property",
+                        "key": {
+                            "type": "Identifier",
+                            "name": "isArray"
+                        }
+                    },
+                    {
+                        "type": "Property",
+                        "key": {
+                            "type": "Identifier",
+                            "name": "isString"
+                        }
+                    },
+                    {
+                        "type": "Property",
+                        "key": {
+                            "type": "Identifier",
+                            "name": "isNumber"
+                        }
+                    },
+                    {
+                        "type": "Property",
+                        "key": {
+                            "type": "Identifier",
+                            "name": "isObject"
+                        }
+                    },
+                    {
+                        "type": "Property",
+                        "key": {
+                            "type": "Identifier",
+                            "name": "isDate"
+                        }
+                    },
+                    {
+                        "type": "Property",
+                        "key": {
+                            "type": "Identifier",
+                            "name": "isFile"
+                        }
+                    },
+                    {
+                        "type": "Property",
+                        "key": {
+                            "type": "Identifier",
+                            "name": "isBlob"
+                        }
+                    },
+                    {
+                        "type": "Property",
+                        "key": {
+                            "type": "Identifier",
+                            "name": "forEach"
+                        }
+                    },
+                    {
+                        "type": "Property",
+                        "key": {
+                            "type": "Identifier",
+                            "name": "merge"
+                        }
+                    },
+                    {
+                        "type": "Property",
+                        "key": {
+                            "type": "Identifier",
+                            "name": "trim"
+                        }
+                    }
+                ]
+            }
+        }
+    }],
+    "$depth": 0,
+    "$length": 0,
+    "output": {
+        "code": "{$0}",
+        "message": "resource.tagged.axios-lib-sign"
+    }
+}
