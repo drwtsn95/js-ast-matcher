@@ -1,7 +1,9 @@
 'use strict';
 const wcmatch = require('wildcard-match');
 
-function ASTPatternMatcher() {}
+function ASTPatternMatcher() {
+    this.nodesParents = null;
+}
 
 ASTPatternMatcher.isWildcard = (data) =>
     typeof data === 'object' && ASTPatternMatcher.hasProp(data, '$wildcard');
@@ -33,11 +35,11 @@ ASTPatternMatcher.prototype.matchValue = function (pattern, data) {
     }
 };
 
-ASTPatternMatcher.prototype.getFieldValue = function (data, field_name) {
-    if (field_name === '$value') {
+ASTPatternMatcher.prototype.getFieldValue = function (data, fieldName) {
+    if (fieldName === '$value') {
         return data;
     }
-    return data[field_name];
+    return data[fieldName];
 };
 
 ASTPatternMatcher.prototype.checkListLength = function (pattern, data) {
@@ -57,10 +59,10 @@ ASTPatternMatcher.prototype.checkListLength = function (pattern, data) {
     }
 
     const comparisonFuncs = {
-        $length_gt: (length, data) => data.length > length,
-        $length_lt: (length, data) => data.length < length,
-        $length_gte: (length, data) => data.length >= length,
-        $length_lte: (length, data) => data.length <= length,
+        $lengthGT: (length, data) => data.length > length,
+        $lengthLT: (length, data) => data.length < length,
+        $lengthGTE: (length, data) => data.length >= length,
+        $lengthLTE: (length, data) => data.length <= length,
     };
 
     for (const [key, func] of Object.entries(comparisonFuncs)) {
@@ -79,10 +81,10 @@ ASTPatternMatcher.prototype.fuzzyMatchList = function (pattern, data) {
         return false;
     }
 
-    for (let pattern_item of pattern['$values'] || []) {
+    for (let patternItem of pattern['$values'] || []) {
         let matched = false;
-        for (let data_item of data) {
-            let result = this.matchField(pattern_item, data_item);
+        for (let dataItem of data) {
+            let result = this.matchField(patternItem, dataItem);
             if (result) {
                 matched = true;
                 break;
@@ -111,8 +113,8 @@ ASTPatternMatcher.prototype.matchList = function (pattern, data) {
 
 ASTPatternMatcher.prototype.matchIn = function (pattern, data) {
     let result;
-    for (let pattern_item of pattern) {
-        result = this.matchField(pattern_item, data);
+    for (let patternItem of pattern) {
+        result = this.matchField(patternItem, data);
         if (result) {
             return true;
         }
@@ -122,22 +124,30 @@ ASTPatternMatcher.prototype.matchIn = function (pattern, data) {
 
 ASTPatternMatcher.prototype.matchSubtree = function (pattern, data) {
     let result;
-    for (let field_name in pattern) {
-        if (field_name.startsWith('$')) {
-            if (field_name === '$where') {
+    for (let fieldName in pattern) {
+        if (fieldName.startsWith('$')) {
+            if (fieldName === '$where') {
                 continue;
-            } else if (field_name === '$in') {
-                result = this.matchIn(pattern[field_name], data);
+            } else if (fieldName === '$in') {
+                result = this.matchIn(pattern[fieldName], data);
+                if (!result) {
+                    return false;
+                }
+            } else if (fieldName === '$parent') {
+                result = this.matchSubtree(
+                    pattern[fieldName],
+                    this.nodesParents.get(data)
+                );
                 if (!result) {
                     return false;
                 }
             }
         } else {
-            let field_data = this.getFieldValue(data, field_name);
-            if (field_data === undefined) {
+            let fieldValue = this.getFieldValue(data, fieldName);
+            if (fieldValue === undefined) {
                 return false;
             }
-            result = this.matchField(pattern[field_name], field_data);
+            result = this.matchField(pattern[fieldName], fieldValue);
             if (!result) {
                 return false;
             }
@@ -167,7 +177,7 @@ ASTPatternMatcher.prototype.matchField = function (pattern, data) {
 ASTPatternMatcher.getChildNodes = function (node) {
     let children = [];
     for (let [key, value] of Object.entries(node)) {
-        if (ASTPatternMatcher.isSubtree(value) && key !== '_parent') {
+        if (ASTPatternMatcher.isSubtree(value)) {
             children.push(value);
         } else if (ASTPatternMatcher.isArray(value)) {
             children.push(...value);
@@ -181,24 +191,24 @@ ASTPatternMatcher.prototype.match = function* (
     data,
     depth,
     length,
-    traverse_depth = Infinity
+    traverseDepth = Infinity
 ) {
-    let result;
-    let to_process = [data];
-    let current_node;
-    data['_depth'] = 0;
-    while (to_process.length) {
-        current_node = to_process.pop();
-        if (current_node === null) {
+    const toProcess = [[0, data]];
+    this.nodesParents = new Map();
+    this.nodesParents.set(data, null);
+    while (toProcess.length) {
+        const [currentNodeDepth, currentNode] = toProcess.pop();
+        if (currentNode === null) {
             //filtering "null" nodes - for instance arr = [,,,]
             continue;
         }
-        if (current_node['_depth'] > traverse_depth) {
+
+        if (currentNodeDepth > traverseDepth) {
             continue;
         }
-        result = this.matchSubtree(pattern, current_node);
+        const result = this.matchSubtree(pattern, currentNode);
         if (result) {
-            let check = this.detectBoundaries(current_node, depth, length);
+            let check = this.detectBoundaries(currentNode, depth, length);
             if (check) {
                 yield check;
             }
@@ -206,15 +216,14 @@ ASTPatternMatcher.prototype.match = function* (
                 continue;
             }
         }
-        let current_node_children =
-            ASTPatternMatcher.getChildNodes(current_node);
-        for (let child of current_node_children) {
+        let currentNodeChildren = ASTPatternMatcher.getChildNodes(currentNode);
+        for (let child of currentNodeChildren) {
             if (ASTPatternMatcher.isSubtree(child)) {
-                child['_parent'] = current_node;
-                child['_depth'] = current_node['_depth'] + 1;
+                this.nodesParents.set(child, currentNode);
             }
         }
-        to_process.push(...current_node_children);
+        const childDepth = currentNodeDepth + 1;
+        toProcess.push(...currentNodeChildren.map((c) => [childDepth, c]));
     }
     return false;
 };
@@ -224,11 +233,11 @@ ASTPatternMatcher.prototype.detectBoundaries = function (node, depth, length) {
         return [node, [node.start, node.end]];
     }
 
-    let current_node;
+    let currentNode;
     while (depth) {
-        if (Object.prototype.hasOwnProperty.call(node, '_parent')) {
-            let parent = node['_parent'];
-            current_node = node;
+        const parent = this.nodesParents.get(node);
+        if (parent !== null) {
+            currentNode = node;
             if (
                 node.type === 'CallExpression' &&
                 node.callee.type === 'FunctionExpression' &&
@@ -242,7 +251,7 @@ ASTPatternMatcher.prototype.detectBoundaries = function (node, depth, length) {
             return false;
         }
     }
-    return [current_node, [current_node.start, current_node.end]];
+    return [currentNode, [currentNode.start, currentNode.end]];
 };
 
 exports.ASTPatternMatcher = ASTPatternMatcher;

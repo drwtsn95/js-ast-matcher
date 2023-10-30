@@ -38,7 +38,7 @@
             "type": "Identifier",
             "name": "jQuery"
         },
-        "_parent": {
+        "$parent": {
             "type": "ExpressionStatement"
         }
     }],
